@@ -1,1 +1,1 @@
-This repository consists of the famous hash and related algorithms.
+This repository consists of popular cryptography and hash algorithms.
