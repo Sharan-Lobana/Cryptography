@@ -11,6 +11,17 @@ def mapping(n):
 		return '+'
 	return '/'
 
+def reverse_mapping(n):
+	if 48<=n<=57:
+		return n+4
+	elif 65<=n<=90:
+		return n-65
+	elif 97<=n<=122:
+		return n-71
+	elif n==43:
+		return 62
+	return 63
+
 def numberToBase(n, b):
     if n == 0:
         return [0]
@@ -43,3 +54,26 @@ def encode(message):
 	
 	encoded_message = encoded_message + append_value
 	return encoded_message
+def decode(enc):
+	num_of_blocks = len(enc)/4
+	original_stream = ''
+	if num_of_blocks > 1:
+		for i in range(4*(num_of_blocks-1)):
+			char = reverse_mapping(ord(enc[i]))
+			original_stream = original_stream + '{0:06b}'.format(char)
+	if enc[-1]=='=':
+		original_stream = original_stream + '{0:06b}'.format(reverse_mapping(ord(enc[-4])))
+		original_stream = original_stream + '{0:06b}'.format(reverse_mapping(ord(enc[-3])))
+		if enc[-2]!='=':
+			original_stream = original_stream + '{0:06b}'.format(reverse_mapping(ord(enc[-2])))
+			original_stream = original_stream[:-2]
+		else:
+			original_stream = original_stream[:-4]
+	else:
+		for i in range(4):
+			original_stream = original_stream + '{0:06b}'.format(reverse_mapping(ord(enc[-4+i])))
+	decoded_message = ''
+	for i in range(len(original_stream)/8):
+		decoded_message += chr(int(original_stream[8*i:8*(i+1)],base=2))
+	return decoded_message
+
