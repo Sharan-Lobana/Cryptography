@@ -5,12 +5,37 @@ Created: 2016-01-07
 '''
 import random
 import numpy as np 
-def gcd(b,a):
+import string
+#GCD using Euclid's algorithm
+def gcd(a,b):
 	if b==0:
 		return a
-	if a == 0:
-		return b
-	return gcd(a%b,b)
+	return gcd(b,a%b)
+
+#Iterative implementation of gcd using Euclid's algorithm
+def iterative_gcd(a,b):
+	while b:
+		a,b = b,a%b
+	return a 
+
+#GCD using bit operations
+def bgcd(a,b):
+	if a == b: return a
+	if a == 0: return b 
+	if b == 0: return a
+	if (~a & 1): #if a is even
+		if(~b & 1): # if b is even
+			return bgcd(a>>1,b>>1)<<1  #gcd(a,b) = 2*gcd(a/2,b/2)
+		else:
+			return bgcd(a>>1,b)   #gcd(a,b) = gcd(a/2,b)
+	else:	#if a is odd
+		if(~b & 1):	#if b is even
+			return bgcd(a,b>>1)	#gcd(a,b) = gcd(a,b/2)
+		else:	#if b is odd
+			if (a>b):
+				return bgcd((a-b)>>1,b)	#from the Euler's algorithm
+	#if a and b both are odd and b<a
+	return bgcd((b-a)>>1,a)	#b-a is even and gcd(b-a,b)= gcd((b-a)/2,b)
 
 def modular_multiplicative_inverse(a,n):
 	t = 0
@@ -43,6 +68,11 @@ def char_to_int(char):
 def int_to_char(integer):
 	return chr(integer + 65)
 
+#Utility function to generate random string of specified length
+def generate_random_string(length):
+	return ''.join(random.choice(string.ascii_lowercase)\
+	 for _ in range(length))
+
 #key generation for Hill cipher
 def generate_key_hill():
 		key = [[0 for x in range(3)] for x in range(3)]
@@ -64,3 +94,6 @@ def generate_key_hill():
 			return generate_key_hill()
 
 		return key_matrix
+#key generation for transposition cipher
+def generate_key_transposition():
+	return random.sample(range(0,5),5)
