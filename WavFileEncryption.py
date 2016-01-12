@@ -30,24 +30,13 @@ def encrypt_from_file(filename,s):
 	num_frames = params[3]
 	#Extract the byte_stream
 	byte_stream = f.readframes(num_frames)
-	bit_stream = ''
-
-	#Convert byte stream to bit stream 
-	for i in range(len(byte_stream)):
-		curr = byte_stream[i]
-		curr = curr.encode('hex')
-		integer = int(curr,16)
-		c = '{0:08b}'.format(integer)
-		bit_stream += c
-
-	#Encrypt the bitstream with state vector s
-	#The state vector chages dynamically during encryption
-	#A copy of the orignal state vector is returned for decryption
+	a = BitArray(bytes=byte_stream)
+	bit_stream = a.bin 
 	cipher,s= r.encipher(bit_stream,s,True)
 	f.close()
 
-	#The parameters are required for setting the  
-	#metadata for decrypted file
+	#The parameters are required for setting 
+	#the metadata for decrypted file
 	return cipher,s,params
 
 #Pass the name of .wav file to which you want to save the audio
