@@ -1,17 +1,19 @@
 #.wav audio file encryption and decryption
 #using RC4 stream cipher
 
-#This program has some issues
 import wave
 import rc4stream as r
 from bitstring import BitArray
 
+#Utility function to convert integer to hexadecimal
 def int_to_hex(integer):
 	dic = {10:'a',11:'b',12:'c',13:'d',14:'e',15:'f'}
 	if 0<= integer<= 9:
 		return str(integer)
 	else: return dic[integer]
 
+#Generate the state vector for RC4 encryption 
+#from the user supplied string
 def generate_state_vector(string):
 	bits_128 = r.generate_key(string)
 	t_vec = r.initialize_T_vector(bits_128)
@@ -19,23 +21,33 @@ def generate_state_vector(string):
 	s_vec = r.key_scheduling(s_vec,t_vec)
 	return s_vec
 
+#Encrypt a given .wav audio file with given state vector s
 def encrypt_from_file(filename,s):
 	f = wave.open(filename,'rb')
 	#Gather metadata about the .wav file
+
 	params = f.getparams()
 	num_frames = params[3]
+	#Extract the byte_stream
 	byte_stream = f.readframes(num_frames)
-	# print "The first 100 bytes of the stream are"
-	# print byte_stream[:100000]
 	bit_stream = ''
+
+	#Convert byte stream to bit stream 
 	for i in range(len(byte_stream)):
 		curr = byte_stream[i]
 		curr = curr.encode('hex')
 		integer = int(curr,16)
 		c = '{0:08b}'.format(integer)
 		bit_stream += c
+
+	#Encrypt the bitstream with state vector s
+	#The state vector chages dynamically during encryption
+	#A copy of the orignal state vector is returned for decryption
 	cipher,s= r.encipher(bit_stream,s,True)
 	f.close()
+
+	#The parameters are required for setting the  
+	#metadata for decrypted file
 	return cipher,s,params
 
 #Pass the name of .wav file to which you want to save the audio
