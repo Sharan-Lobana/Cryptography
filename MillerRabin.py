@@ -1,7 +1,7 @@
 #Miller-Rabin implementation
 
 def primality_test(p):
-	probes = [2,3,5,7,11,13,17,23,29]	#The probes for a
+	probes = [2,3,5,7,11,13,17,23]	#The probes for a
 	if any([p%a == 0 for a in probes]):return 0	#if p is divisble by a then not prime
 	k,q = 0,p-1 
 	while not q&1:
