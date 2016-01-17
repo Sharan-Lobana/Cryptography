@@ -11,7 +11,7 @@ Created : 2016-01-07
 import numpy as np 
 from utils import modular_multiplicative_inverse,generate_key_hill,gcd,char_to_int,int_to_char 
 
-class HillCipher():
+class HillCipher:
 	'''The Hill cipher encrypts a trigrams of characters,
 	the key consists of 3x3 square matrix having numbers 
 	in the range 0 to 25 inclusive of both

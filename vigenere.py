@@ -1,37 +1,35 @@
 #Python implementation of Vigenere cipher
+from utils import alignment 
 
-def alignment(cipher,key):
-	l1 = len(key)
-	l2 = len(cipher)
-	cipher = cipher.upper()
-	key = key.upper()
-	aligned_key = ''
-	if l1 >= l2:
-		aligned_key = key[:l2]
-	else:
-		repeatitions = l2/l1
-	for i in range(repeatitions):
-		aligned_key += key
-	if (l2%l1) !=0:
-		aligned_key +=key[:l2%l1]
-	return (cipher,aligned_key)
+class Vigenere:
+	'''The Vigenere Cipher is shifted Caesar Cipher 
+	in which the key length is equal to message length
+	and each plaintext character is shifted by an amount 
+	decided by the corresponding character in the key'''
+	
+	def __init__(self,paraphrase="Thisistheparaphraseforkeygeneration"):
+		self.key = paraphrase
 
-def encipher(message,key="ABRACADABRA"):
-	message = message.replace(' ','')
-	(filtered_message,aligned_key) = alignment(message,key)
-	print filtered_message 
-	print aligned_key
-	cipher = ''
-	l2 = len(filtered_message)
-	print l2
-	for i in range(l2):
-		cipher += chr((ord(filtered_message[i])+ord(aligned_key[i]) -130)%26 + 65)
-	return cipher
+	def set_key(self,string):
+		self.key = string
 
-def decipher(cipher,key="ABRACADABRA"):
-	(cipher,aligned_key) = alignment(cipher,key)
-	l2 = len(cipher)
-	message = ''
-	for i in range(l2):
-		message += chr((ord(cipher[i]) - ord(aligned_key[i]) -130)%26 + 65)
-	return message
+	def encipher(self,message,key=None):
+		if key==None:
+			key=self.key
+		message = message.replace(' ','')
+		(filtered_message,aligned_key) = alignment(message,key)
+		cipher = ''
+		l2 = len(filtered_message)
+		for i in range(l2):
+			cipher += chr((ord(filtered_message[i])+ord(aligned_key[i]) -130)%26 + 65)
+		return cipher
+
+	def decipher(self,cipher,key=None):
+		if key==None:
+			key = self.key
+		(cipher,aligned_key) = alignment(cipher,key)
+		l2 = len(cipher)
+		message = ''
+		for i in range(l2):
+			message += chr((ord(cipher[i]) - ord(aligned_key[i]) -130)%26 + 65)
+		return message

@@ -97,3 +97,20 @@ def generate_key_hill():
 #key generation for transposition cipher
 def generate_key_transposition():
 	return random.sample(range(0,5),5)
+
+#Key alignment and plaintext filtering for Vignere Cipher
+def alignment(cipher,key):
+		l1 = len(key)
+		l2 = len(cipher)
+		cipher = cipher.upper()
+		key = key.upper()
+		aligned_key = ''
+		if l1 >= l2:
+			aligned_key = key[:l2]
+		else:
+			repeatitions = l2/l1
+		for i in range(repeatitions):
+			aligned_key += key
+		if (l2%l1) !=0:
+			aligned_key +=key[:l2%l1]
+		return (cipher,aligned_key)
