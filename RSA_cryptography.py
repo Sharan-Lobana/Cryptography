@@ -1,33 +1,10 @@
 #Python implementation of RSA encryption 
 import random
+from utils import modular_multiplicative_inverse
 
 #Primality Test O(sqrt(n)) time complexity
 def isPrime(a):
      return not (a < 2 or any(a % x == 0 for x in range(2, int(a ** 0.5) + 1)))
-
-#Modular Multiplicative Inverse using Extended Euclidean Algorithm
-def modular_multiplicative_inverse(a,n):
-	t = 0
-	nt = 1
-	r = n
-	nr = a%n 
-	if n < 0:
-		n = -n
-	if a < 0:
-		a = n - (-a%n)
-	while nr != 0:
-		quot = (r/nr) | 0
-		tmp = nt 
-		nt = t - quot*nt 
-		t = tmp
-		tmp = nr 
-		nr = r - quot*nr 
-		r = tmp
-	if r > 1:
-		return -1
-	if t < 0:
-		t += n
-	return t 
 
 #Utility function to generate a random prime in a given range(both inclusive)
 def random_prime(mini,maxi):
